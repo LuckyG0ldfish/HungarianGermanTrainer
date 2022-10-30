@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-bool TestFile() {
-    return true; 
+int TestFile() {
+    return 0; 
 }
 
-bool RunInputMode() {
+int RunInputMode() {
 
 
-    return true; 
+    return 0; 
 }

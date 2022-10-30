@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include "Inputmode.c"
 #include "QuestionMode.c"
 
-bool getInput(); 
-bool RunInputMode(); 
-bool selectMode(int i);
+int getInput(); 
+int RunInputMode(); 
+int selectMode(int i);
 
 char input[20];
 char output[20];  
@@ -17,17 +16,11 @@ const int QuestionMode = 2;
 
 
 void main() {
-    printf("Hello, World!\n");
-    getInput(); 
-    printf("%s\n", input); 
-    if (TestFile()) {
-        printf("läuft"); 
-    } else {
-        printf("was is File?"); 
-    }
+    filename = "database.txt";
+
 }
 
-bool selectMode(int i) {
+int selectMode(int i) {
     if (i == InputMode) {
         RunInputMode(); 
     } else if (i == QuestionMode) {
@@ -35,15 +28,16 @@ bool selectMode(int i) {
     } else {
         printf("Only '1' and '2' are viable inputs"); 
     }
+    return 0; 
 }
 
-bool getInput() {
+int getInput() {
     /*where store, length, stdin = standart input*/
     fgets(input, 20, stdin);
-    return true; 
+    return 1; 
 }
 
-bool checkResponse() {
-    
+int checkResponse() {
+    return 0; 
 }
 
