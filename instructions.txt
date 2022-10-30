@@ -1,5 +1,6 @@
 enter folder 
 
+(requires a version of GCC)
 gcc main.c -o main.exe
 
 ./main.exe
