@@ -6,8 +6,8 @@
 #include <string.h>
 
 char *filename = "database.txt"; 
-int number = 2; 
-int length = 370; 
+int number = 3; 
+int length = 320; 
 
 int fillList(); 
 int cmpfunc (const void * a, const void * b);
@@ -36,33 +36,36 @@ int fillList() {
         int countNewLine = 0;  
         int countTab = 0;  
         int check = 0;
-        char row[100]; 
-        while ((c = getc(file)) != EOF) {
+        char row[100]; // s[number]
+        int rowCounter = 0; 
+        while ((c = fgetc(file)) != EOF) { 
             if (isspace(c)) {
                 if (c == '\n') { // no "" just '' for \n
                     countNewLine++;
                     if (check == 1) {
-                        if ((i+1) >= number) {
-                            break; 
+                        printf("%s\n", row); 
+                        check = 0;
+                        rowCounter = 0; 
+                        if ((i+1) > number) {
+                            return 1; 
                         } else {
                             i++; 
                             // TODO: add new row 
-                            printf("%s", row); 
-                            row[100] = '\0'; 
+                            memset(row,0,strlen(row));
                         } 
                     }
-                }
-                if (countNewLine == list[i]) {
-                    check = 1; 
-                    char charValue = c+'0';
-                    char str[1] = "\0"; 
-                    str[0] = charValue; 
-                    strncat(row, str, 100); 
-                }
+                }  
+            }
+            if (countNewLine == list[i]) {
+                check = 1; 
+                char charValue = c;
+                row[rowCounter] = charValue; 
+                rowCounter++;  
             }
         }
         fclose(file);
     }
+    return 0; 
 }
 
 int cmpfunc (const void * a, const void * b) {
@@ -72,9 +75,9 @@ int cmpfunc (const void * a, const void * b) {
 int RandomInts(int amount, int limit, int *list) { 
     srand(time(NULL));   
     for (int i = 0; i < amount; i ++) {
-        list[i] = rand()% (limit-1); 
+        list[i] = rand()% (limit-1);
     }
-    qsort(list, amount, sizeof(int), cmpfunc); 
+    qsort(list, amount, sizeof(int), cmpfunc);
     return 0; 
 }
 
