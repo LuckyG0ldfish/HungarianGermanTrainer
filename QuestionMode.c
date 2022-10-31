@@ -2,10 +2,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
 char *filename = "database.txt"; 
-int number = 20; 
-int length = 200; 
+int number = 2; 
+int length = 370; 
+
+int fillList(); 
+int cmpfunc (const void * a, const void * b);
+int RandomInts(int amount, int limit, int *list); 
 
 typedef struct {
     char Hungarian[20];
@@ -15,16 +21,17 @@ typedef struct {
 WordTuple List[20]; 
 
 int RunQuestionMode() {
-    List[5].Hungarian; 
+    fillList(); 
     return 0; 
 }
 
 int fillList() {
     int c;
     FILE *file;
-    file = fopen("test.txt", "r");
+    file = fopen("testDatabase.txt", "r");
     if (file) {
-        int *rngInts = RandomInts(number, length); 
+        int list[number]; 
+        RandomInts(number, length, list); 
         int i = 0; 
         int countNewLine = 0;  
         int countTab = 0;  
@@ -32,7 +39,7 @@ int fillList() {
         char row[100]; 
         while ((c = getc(file)) != EOF) {
             if (isspace(c)) {
-                if (c == "\n") {
+                if (c == '\n') { // no "" just '' for \n
                     countNewLine++;
                     if (check == 1) {
                         if ((i+1) >= number) {
@@ -40,12 +47,17 @@ int fillList() {
                         } else {
                             i++; 
                             // TODO: add new row 
+                            printf("%s", row); 
+                            row[100] = '\0'; 
                         } 
                     }
                 }
-                if (countNewLine == rngInts[i]) {
+                if (countNewLine == list[i]) {
                     check = 1; 
-                    strcpy(row, tolower(c)); 
+                    char charValue = c+'0';
+                    char str[1] = "\0"; 
+                    str[0] = charValue; 
+                    strncat(row, str, 100); 
                 }
             }
         }
@@ -57,15 +69,16 @@ int cmpfunc (const void * a, const void * b) {
    return ( *(int*)a - *(int*)b );
 }
 
-int *RandomInts(int amount, int limit) {
-    int list[amount]; 
+int RandomInts(int amount, int limit, int *list) { 
     srand(time(NULL));   
     for (int i = 0; i < amount; i ++) {
         list[i] = rand()% (limit-1); 
     }
     qsort(list, amount, sizeof(int), cmpfunc); 
-    return list; 
+    return 0; 
 }
+
+// tab == '\t'
 
 // char *getWord(FILE *fp){
 //     char word[100];

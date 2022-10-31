@@ -6,6 +6,7 @@
 int getInput(); 
 int RunInputMode(); 
 int selectMode(int i);
+int fillList(); 
 
 char input[20];
 char output[20];  
@@ -16,7 +17,7 @@ const int QuestionMode = 2;
 
 
 void main() {
-    filename = "database.txt";
+    fillList(); 
 
 }
 
