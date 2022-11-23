@@ -17,8 +17,8 @@ const int QuestionMode = 2;
 
 
 void main() {
-    fillList(); 
-
+    // fillList(); 
+    RunQuestionMode(); 
 }
 
 int selectMode(int i) {

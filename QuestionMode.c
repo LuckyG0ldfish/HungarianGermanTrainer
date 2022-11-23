@@ -6,7 +6,7 @@
 #include <string.h>
 
 char *filename = "database.txt"; 
-const int number = 3; 
+int number = 3; 
 int length = 320; 
 // const int maxGermanWords = 10; 
 // const int maxHungarianWords = 10; 
@@ -16,6 +16,7 @@ int fillList();
 int cmpfunc (const void * a, const void * b);
 int RandomInts(int amount, int limit, int *list); 
 int CalcLength(); 
+int getNumberOfWords(); 
 
 typedef struct {
     char Hungarian[10][40];
@@ -28,7 +29,8 @@ typedef struct {
 WordTuple List[3]; 
 
 int RunQuestionMode() {
-    CalcLength(); 
+    CalcLength();
+    getNumberOfWords();  
     fillList(); 
     return 0; 
 }
@@ -44,7 +46,7 @@ int fillList() {
         int countNewLine = 0;  
         int countTab = 0;  
         int check = 0;
-        char row[200]; // s[number]
+        char row[300]; // s[number]
         int rowCounter = 0; 
         while ((c = fgetc(file)) != EOF) { 
             if (isspace(c)) {
@@ -90,6 +92,19 @@ int CalcLength(){
     }
     length = CountLines; 
     return CountLines; 
+}
+
+int getNumberOfWords() {
+    int NumberOfWords;
+    printf("Enter the number of words: ");
+    scanf("%d", &NumberOfWords);  
+    if (NumberOfWords < 1 || NumberOfWords > length) {
+        printf("Please pick a number between 1 and the maximum amount of words in the database(%d)", length);
+        getNumberOfWords(); 
+    } else  {
+        number = NumberOfWords; 
+    }
+    return 0;
 }
 
 int rowToObject(int i, char row[]) {
