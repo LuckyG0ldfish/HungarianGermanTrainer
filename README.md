@@ -1,4 +1,4 @@
-# HungarianGermanTrainer
+# VocabTrainer
 Just trying to write a program that checks vocabulary when starting the PC.
 
 
