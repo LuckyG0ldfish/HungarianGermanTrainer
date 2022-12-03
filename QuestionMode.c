@@ -9,15 +9,15 @@
 char *filename = "database.txt"; 
 int number = 3; 
 int length = 320; 
-// const int maxGermanWords = 10; 
-// const int maxHungarianWords = 10; 
-const int maxWordLength = 50; 
+const int maxGermanWords = 10; 
+const int maxHungarianWords = 10; 
+const int maxWordLength = 30; 
 const int German = 1; 
 const int Hungarian = 0;
 
 typedef struct {
-    char Hungarian[10][50];
-    char German[10][50];
+    char Hungarian[10][30];
+    char German[10][30];
     // char Hungarian[maxHungarianWords][maxWordLength];
     // char German[maxGermanWords][maxWordLength];
 } WordTuple;
@@ -27,20 +27,43 @@ int cmpfunc (const void * a, const void * b);
 int RandomInts(int amount, int limit, int *list); 
 int calcLength(); 
 int getNumberOfWords(); 
-WordTuple *rowToObject(char row[]); 
+int rowToObject(char row[], WordTuple *tup); 
 int transferString(char word[], int index, int lang, WordTuple *tuple); 
 int printTuple(WordTuple *tuple); 
+// int initList(WordTuple *list[]); 
 
 // WordTuple List[number]; 
-WordTuple List[3]; 
+// WordTuple List[3]; 
 
 int RunQuestionMode() {
     calcLength();
     getNumberOfWords();  
-    WordTuple *list[number]; 
+    WordTuple *list[number];
+    for (int i; i < number; i ++) {
+        list[i] = (WordTuple*)malloc(sizeof(WordTuple));
+        for (int z = 0; z < maxGermanWords; z++) {
+            for (int j = 0; j < maxWordLength; j++) {
+                list[i]->German[z][j] = (char) 0; 
+            }
+        }
+        for (int z = 0; z < maxHungarianWords; z++) {
+            for (int j = 0; j < maxWordLength; j++) {
+                list[i]->Hungarian[z][j] = (char) 0; 
+            }
+        }
+    } 
+    // initList(list); 
     fillList(list); 
     return 0; 
 }
+
+// WordTuple *initList() {
+//     WordTuple *list[number]; 
+//     for (int i; i < number; i ++) {
+//         list[i] = (WordTuple*)malloc(sizeof(WordTuple));
+//     }
+//     return list; 
+// }
 
 int fillList(WordTuple *tuple[]) {
     int c;
@@ -69,8 +92,8 @@ int fillList(WordTuple *tuple[]) {
                         } else {
                             // TODO: add new row 
                             printf("T1"); 
-                            printf("%s",row);
-                            tuple[i] = rowToObject(row);   
+                            printf("%s\n",row);
+                            rowToObject(row, tuple[i]); 
                             i++;
                             sleep(800); 
                             memset(row,0,200);
@@ -119,14 +142,13 @@ int getNumberOfWords() {
     return 0;
 }
 
-WordTuple *rowToObject(char row[]) {
-    printf("\nrow to object"); 
+int rowToObject(char row[], WordTuple *tup) {
+    // printf("\nrow to object"); 
     int gerCounter = 0; 
     int hungCounter = 0;  
     int tabHappend = 0; 
     char word[maxWordLength]; 
     int wordIndex = 0; 
-    WordTuple tuple; 
     int len = strlen(row); 
     int done = 0; 
     for (int i = 0; i < len; i++) {
@@ -146,11 +168,11 @@ WordTuple *rowToObject(char row[]) {
             // next word
             if (tabHappend == 0) {
                 // add to hungarian
-                transferString(word, hungCounter, Hungarian, &tuple); 
+                transferString(word, hungCounter, Hungarian, tup); 
                 hungCounter ++; 
             } else {
                 // add to german 
-                transferString(word, gerCounter, German, &tuple);
+                transferString(word, gerCounter, German, tup);
                 gerCounter ++; 
             }
             wordIndex = 0; 
@@ -162,8 +184,8 @@ WordTuple *rowToObject(char row[]) {
             tabHappend = 1; 
         }
     }
-    printTuple(&tuple); 
-    return &tuple; 
+    // printTuple(tup); 
+    return 1; 
 }
 
 int transferString(char word[], int index, int lang, WordTuple *tuple) {
@@ -172,14 +194,14 @@ int transferString(char word[], int index, int lang, WordTuple *tuple) {
         return 0; 
     }
 
-    int size; 
-    if (strlen(word) <= sizeof(tuple->Hungarian[index])) {
-        printf("word = max");
-        size = strlen(word); 
-    } else {
-        printf("tuple = max");
-        size = sizeof(tuple->Hungarian[index]); 
-    }
+    int size = maxWordLength; 
+    // if (strlen(word) <= sizeof(tuple->Hungarian[index])) {
+    //     // printf("word = max");
+    //     size = strlen(word); 
+    // } else {
+    //     // printf("tuple = max");
+    //     size = sizeof(tuple->Hungarian[index]); 
+    // }
     
     for (int i = 0; i < size; i++) {
         if (lang == German) {
@@ -192,17 +214,26 @@ int transferString(char word[], int index, int lang, WordTuple *tuple) {
 }
 
 int printTuple(WordTuple *tuple) {
-    for (int i = 0; i < sizeof(tuple->Hungarian); i ++) {
-        if (tuple->Hungarian[i] != NULL) {
-            printf("%s", tuple->Hungarian[i]); 
-            printf("\n"); 
-        }
-    }
+    char word[maxWordLength]; 
+    memset(word,0,maxWordLength);
     for (int i = 0; i < sizeof(tuple->German); i ++) {
-        if (tuple->German[i] != NULL) {
-            printf("%s",tuple->German[i]); 
-            printf("\n");
+        for (int j = 0; j < maxWordLength; j++) {
+            if (tuple->German[i][j] != '\0' && isalpha(tuple->German[i][j])) {
+                word[j] = (char) tuple->German[i][j];
+            } 
         }
+        printf("%s\n", word); 
+        memset(word,0,maxWordLength);
+    }
+
+    for (int i = 0; i < sizeof(tuple->Hungarian); i ++) {
+        for (int j = 0; j < maxWordLength; j++) {
+            if (tuple->Hungarian[i][j] != '\0' && isalpha(tuple->Hungarian[i][j])) {
+                word[j] = (char) tuple->Hungarian[i][j];
+            } 
+        }
+        printf("%s\n", word); 
+        memset(word,0,maxWordLength);
     }
     return 0; 
 }
@@ -219,28 +250,3 @@ int RandomInts(int amount, int limit, int *list) {
     qsort(list, amount, sizeof(int), cmpfunc);
     return 0; 
 }
-// tab == '\t'
-
-// char *getWord(FILE *fp){
-//     char word[100];
-//     int ch, i=0;
-
-//     while(EOF!=(ch=fgetc(fp)) && !isalpha(ch))
-//         ;//skip
-//     if(ch == EOF)
-//         return NULL;
-//     do{
-//         word[i++] = tolower(ch);
-//     }while(EOF!=(ch=fgetc(fp)) && isalpha(ch));
-
-//     word[i]='\0';
-//     return strdup(word);
-// }
-// void read(FILE *fp){
-//     char *word;
-//     while(word=getWord(fp)){
-        
-//     }
-//     //rewind(fp1);
-//     fclose(fp);
-// }
